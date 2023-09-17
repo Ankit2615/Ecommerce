@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image and Data Upload to Firebase</title>
+  <!-- Include Firebase SDK and initialize -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1-0/firebase-database.js"></script>
+  <script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyAMu8wTgJPh6o_Q1Z3k5TUVh-VnVi1ghsM",
+        authDomain: "organicstor-5b6c2.firebaseapp.com",
+        databaseURL: "https://organicstor-5b6c2-default-rtdb.firebaseio.com",
+        projectId: "organicstor-5b6c2",
+        storageBucket: "organicstor-5b6c2.appspot.com",
+        messagingSenderId: "799023522468",
+        appId: "1:799023522468:web:9d07b6dad30d8c9947bc31",
+        measurementId: "G-CLBCL7NRG6"
+    };
+     
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <h1>Image and Data Upload to Firebase</h1>
+  <input type="file" id="fileInput">
+  <input type="text" id="nameInput" placeholder="Enter image name">
+  <input type="text" id="descriptionInput" placeholder="Enter description">
+  <input type="number" id="priceInput" placeholder="Enter price">
+  <button id="uploadButton">Upload</button>
+  <script>
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const database = firebase.database();
+    const imagesRef = database.ref("images");
+
+    const fileInput = document.getElementById("fileInput");
+    const nameInput = document.getElementById("nameInput");
+    const descriptionInput = document.getElementById("descriptionInput");
+    const priceInput = document.getElementById("priceInput");
+    const uploadButton = document.getElementById("uploadButton");
+
+    uploadButton.addEventListener("click", function() {
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+      
+      const name = nameInput.value;
+      const description = descriptionInput.value;
+      const price = priceInput.value;
+
+      const imageRef = storageRef.child("images/" + file.name);
+
+      imageRef.put(file).then(snapshot => {
+        snapshot.ref.getDownloadURL().then(url => {
+          imagesRef.push({
+            imageUrl: url,
+            name: name,
+            description: description,
+            price: price
+          });
+          alert("Image and data uploaded!");
+          // Clear the inputs
+          fileInput.value = "";
+          nameInput.value = "";
+          descriptionInput.value = "";
+          priceInput.value = "";
+        });
+      }).catch(error => {
+        console.error("Error uploading image:", error);
+      });
+    });
+  </script>
+</body>
+</html>

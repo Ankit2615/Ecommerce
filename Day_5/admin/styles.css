@@ -1,0 +1,16 @@
+body{
+    background-image: url('./bg.jpg');
+    /* background-blend-mode: overlay; */
+    background-color: (0,0,0,0.5);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+form{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    position: absolute;
+    background-color: white; 
+    
+}
